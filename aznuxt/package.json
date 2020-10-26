@@ -1,0 +1,28 @@
+{
+  "name": "sar",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "tsc",
+    "build:nuxt": "nuxt build",
+    "watch": "tsc -w",
+    "prestart": "npm run build",
+    "start": "func start",
+    "test": "echo \"No tests yet...\""
+  },
+  "dependencies": {
+    "@nuxt/http": "^0.6.0",
+    "@nuxtjs/apollo": "^4.0.1-rc.4",
+    "aws-serverless-express": "^3.3.8",
+    "azure-function-express": "^2.0.0",
+    "express": "^4.17.1",
+    "graphql-tag": "^2.11.0",
+    "nanoid": "^3.1.15",
+    "nuxt": "^2.14.7"
+  },
+  "devDependencies": {
+    "@azure/functions": "^1.0.2-beta2",
+    "@nuxt/types": "^2.14.7",
+    "typescript": "^3.3.3"
+  }
+}
