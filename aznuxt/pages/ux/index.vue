@@ -1,6 +1,6 @@
 <template>
   <section class="todoapp">
-    <h1>Todo List</h1>
+    <h1>Sar Todo</h1>
     <header class="header">
       <input
         class="new-todo"
