@@ -26,13 +26,13 @@ namespace Ec.Sar.TodoDemo.Domain
     public static Todo Record(Id id, Title title)
     {
       return Todo.Of(
-        id ?? Id.Next(),
-        title,
-        CompletedFlag.Of(false),
-        Timestamp.Now(), // CreatedAt
-        Timestamp.Now(), // ModifiedAt
-        ActiveFlag.Of(true),
-        AggregateVersion.Next()
+        id: id ?? Id.Next(),
+        title: title,
+        completed: CompletedFlag.Of(false),
+        createdAt: Timestamp.Now(),
+        modifiedAt: Timestamp.Now(), 
+        active: ActiveFlag.Of(true),
+        version: AggregateVersion.Next()
       );
     }
     public static Todo Of(
