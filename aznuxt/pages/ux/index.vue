@@ -15,7 +15,7 @@
     <section class="main">
       <ul class="todo-list">
         <li
-          v-for="todo in allTodos"
+          v-for="(todo, index) in allTodos"
           :key="todo.id"
           class="todo"
           :class="{ completed: todo.completed }"
@@ -29,7 +29,7 @@
               @change="toggleTodo(todo)"
             />
             <label :for="todo.id">{{ todo.title }}</label>
-            <button class="destroy" @click="removeTodo(todo)"></button>
+            <button class="destroy" @click="removeTodo(todo, index)"></button>
           </div>
         </li>
       </ul>
@@ -56,6 +56,7 @@ export default {
   },
   methods: {
     addTodo() {
+      console.log("attempting addTodo");
       if (!this.todoTxt?.length) return;
 
       let newTodo = {
@@ -82,7 +83,8 @@ export default {
           );
         });
     },
-    removeTodo(toRemove) {
+    removeTodo(toRemove, index) {
+      console.log("attempting removeTodo");
       if (toRemove == null) return;
       // update the UI
       this.allTodos = this.allTodos.filter((todo) => todo.id !== toRemove.id);
@@ -95,21 +97,23 @@ export default {
           variables: { id: toRemove.id },
         })
         .catch((err) => {
+          console.log(err);
           this.allTodos = [toRemove, ...this.allTodos]; // TODO: Preserve order.
         });
     },
     toggleTodo(toToggle) {
-      // update the UI
-      toToggle.completed = !toToggle.completed;
+      console.log("attempting toggleTodo");
 
-      // asynchronously update the server
+      // UI was updated via two way binding (v-model="todo.completed")
+      // so we now asynchronously update the server to match the UI
       // and back out our UI updates in case of error.
       this.$apollo
         .mutate({
-          mutation: toggleTodo,
+          mutation: toggleTodoGQL,
           variables: { id: toToggle.id, completed: toToggle.completed },
         })
         .catch((err) => {
+          console.log(err);
           toToggle.completed = !toToggle.completed;
         });
     },
