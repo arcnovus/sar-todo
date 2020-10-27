@@ -1,7 +1,7 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
 import { loadNuxt } from "nuxt";
 
-const httpTrigger: AzureFunction = async function (
+const httpTrigger: AzureFunction = async function(
   context: Context,
   req: HttpRequest
 ): Promise<void> {
@@ -9,7 +9,7 @@ const httpTrigger: AzureFunction = async function (
   let nuxt = await loadNuxt("start");
   let result = await nuxt.renderRoute(new URL(req.url).pathname, context);
 
-  let { html, cspScriptSrcHashes, error, redirected, preloadFiles } = result;
+  let { html, _cspScriptSrcHashes, error, redirected, _preloadFiles } = result;
 
   console.log(error, redirected);
   context.res = {
