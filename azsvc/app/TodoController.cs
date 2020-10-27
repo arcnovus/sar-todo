@@ -23,7 +23,7 @@ namespace Ec.Sar.TodoDemo.App
 
   // TODO: Better Error Handling/Logging.
   // TODO: Auth
-   public class TodoController
+  public class TodoController
   {
     private ITodoService _todoService;
 
@@ -72,8 +72,8 @@ namespace Ec.Sar.TodoDemo.App
       {
         return HandleError(ex, log);
       }
-
     }
+
     [FunctionName("PatchTodoTitle")]
     public async Task<IActionResult> PatchTodoTitle(
     [HttpTrigger(AuthorizationLevel.Anonymous, "patch", Route = "todos/{id}/title")] HttpRequest req,
@@ -85,8 +85,10 @@ namespace Ec.Sar.TodoDemo.App
       {
         string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
         dynamic data = JsonConvert.DeserializeObject(requestBody);
+
         var toRename = ToResource(data);
         toRename.id = id;
+
         var updated = _todoService.RenameTodo(toRename);
 
         return (ActionResult)new OkObjectResult(updated);
@@ -108,8 +110,10 @@ namespace Ec.Sar.TodoDemo.App
       {
         string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
         dynamic data = JsonConvert.DeserializeObject(requestBody);
+
         var toToggle = ToResource(data);
         toToggle.id = id;
+        
         var updated = _todoService.ToggleTodo(toToggle);
 
         return (ActionResult)new OkObjectResult(updated);
@@ -138,6 +142,7 @@ namespace Ec.Sar.TodoDemo.App
         return HandleError(ex, log);
       }
     }
+
     private ITodoResource ToResource(dynamic data)
     {
       return new TodoResource()
@@ -147,6 +152,7 @@ namespace Ec.Sar.TodoDemo.App
         completed = data.completed
       };
     }
+
     // TODO: Move this and make it better (proper logging, etc...).
     private IActionResult HandleError(Exception ex, ILogger log)
     {
