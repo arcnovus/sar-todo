@@ -81,6 +81,7 @@ namespace Ec.Sar.TodoDemo.App
     string id)
     {
       log.LogInformation("C# HTTP trigger function processed a PATCH title request.");
+
       try
       {
         string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -106,6 +107,7 @@ namespace Ec.Sar.TodoDemo.App
     string id)
     {
       log.LogInformation("C# HTTP trigger function processed a PATCH completion request.");
+
       try
       {
         string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -131,6 +133,7 @@ namespace Ec.Sar.TodoDemo.App
     string id)
     {
       log.LogInformation("C# HTTP trigger function processed a DELETE request.");
+
       try
       {
         _todoService.CancelTodo(id);
@@ -156,18 +159,22 @@ namespace Ec.Sar.TodoDemo.App
     private IActionResult HandleError(Exception ex, ILogger log)
     {
       log.LogError(ex, ex.Message);
+
       if (ex.GetType() == typeof(System.ComponentModel.DataAnnotations.ValidationException))
       {
-        return (ActionResult)new BadRequestObjectResult(new { error = ex.Message });
+        return (ActionResult)new BadRequestObjectResult(
+          new { error = ex.Message }
+        );
       }
+
       if (ex.Message.Contains("E11000"))
       {
-        return (ActionResult)new BadRequestObjectResult(new { error = "Duplicate." });
+        return (ActionResult)new BadRequestObjectResult(
+          new { error = "Duplicate." }
+        );
       }
-      else
-      {
-        return (ActionResult)new InternalServerErrorResult();
-      }
+
+      return (ActionResult)new InternalServerErrorResult();
     }
   }
 }
