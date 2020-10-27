@@ -66,7 +66,7 @@ namespace Ec.Sar.TodoDemo.Infrastructure
                                         .Set("modifiedAt", todo.ModifiedAt.ToLong())
                                         // BUG: MongoDB driver doesn't like decimals, 
                                         // so use a string https://jira.mongodb.org/browse/CSHARP-196
-                                        .Set("version", todo.Version.ToString()); 
+                                        .Set("version", AggregateVersion.Next().ToString()); 
 
       var options = new FindOneAndUpdateOptions<BsonDocument>
       {
