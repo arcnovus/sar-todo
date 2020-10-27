@@ -28,6 +28,7 @@ namespace Ec.Sar.TodoDemo.Infrastructure
                 .Find(filter)
                 .SortByDescending(todo => todo["createdAt"])
                 .ForEachAsync(todo => todoList.Add(FromBson(todo)));
+
       return todoList;
     }
 
@@ -36,6 +37,7 @@ namespace Ec.Sar.TodoDemo.Infrastructure
       var todo = _todoDb.Find(new BsonDocument {
                                     { "_id", id.ToString() }
                                   }).First();
+
       return FromBson(todo);
     }
 
@@ -52,6 +54,7 @@ namespace Ec.Sar.TodoDemo.Infrastructure
         // so use a string. ref: https://jira.mongodb.org/browse/CSHARP-196
         {"version", todo.Version.ToString()}
       });
+
       return FindById(todo.Id);
     }
 
