@@ -48,7 +48,9 @@ namespace Ec.Sar.TodoDemo.Infrastructure
         {"isActive", todo.Active.ToBoolean() },
         {"createdAt", todo.CreatedAt.ToLong()},
         {"modifiedAt", todo.ModifiedAt.ToLong()},
-        {"version", todo.Version.ToDecimal()}
+        // BUG: MongoDB driver doesn't like decimals, 
+        // so use a string. ref: https://jira.mongodb.org/browse/CSHARP-196
+        {"version", todo.Version.ToString()}
       });
       return FindById(todo.Id);
     }
@@ -63,7 +65,9 @@ namespace Ec.Sar.TodoDemo.Infrastructure
                                         .Set("isActive", todo.Active.ToBoolean())
                                         .Set("createdAt", todo.CreatedAt.ToLong())
                                         .Set("modifiedAt", todo.ModifiedAt.ToLong())
-                                        .Set("version", todo.Version.ToDecimal());
+                                        // BUG: MongoDB driver doesn't like decimals, 
+                                        // so use a string https://jira.mongodb.org/browse/CSHARP-196
+                                        .Set("version", todo.Version.ToString()); 
 
       var options = new FindOneAndUpdateOptions<BsonDocument>
       {

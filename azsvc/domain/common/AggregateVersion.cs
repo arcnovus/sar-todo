@@ -21,6 +21,7 @@ namespace Ec.Sar.Common.Domain
       this._value = value;
     }
     public decimal ToDecimal() => Value;
+    public override string ToString() => Value.ToString();
     public bool Equals(IValueObject<decimal> other) => this.Value == other.Value;
   }
 }
