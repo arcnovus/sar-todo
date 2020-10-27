@@ -12,7 +12,6 @@ namespace Ec.Sar.TodoDemo.Infrastructure
   public class TodoRepository : ITodoRepository
   {
     private IMongoCollection<BsonDocument> _todoDb;
-    // TODO: Dependency Injection
     public TodoRepository(IMongoCollection<BsonDocument> todoDb)
     {
       _todoDb = todoDb;
