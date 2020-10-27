@@ -95,7 +95,7 @@ namespace Ec.Sar.TodoDemo.Infrastructure
       _todoDb.DeleteOne(Builders<BsonDocument>.Filter.Eq("_id", id.ToString()));
     }
 
-    // TODO: Use a mapper.
+    // TODO: Use a mapper/annotations and stronger typing for BsonDocument.
     private ITodo FromBson(BsonDocument todo)
     {
       return Todo.Of(
