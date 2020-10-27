@@ -56,7 +56,9 @@ namespace Ec.Sar.TodoDemo.Infrastructure
     // TODO: Optimistic Concurrency
     public ITodo Update(ITodo todo)
     {
-      var filter = Builders<BsonDocument>.Filter.Eq("_id", todo.Id.ToString());
+      var idFilter = Builders<BsonDocument>.Filter.Eq("_id", todo.Id.ToString());
+      var versionFilter = Builders<BsonDocument>.Filter.Eq("version", todo.Version.ToString());
+      var filter = Builders<BsonDocument>.Filter.And(idFilter, versionFilter);
       var update = Builders<BsonDocument>.Update
                                         .Set("_id", todo.Id.ToString())
                                         .Set("title", todo.Title.ToString())
