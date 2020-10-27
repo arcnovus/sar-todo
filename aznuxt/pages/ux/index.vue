@@ -86,7 +86,7 @@ export default {
     removeTodo(toRemove, index) {
       if (toRemove == null) return;
 
-      // update the UI
+      // optimistically update the UI
       this.allTodos = this.allTodos.filter((todo) => todo.id !== toRemove.id);
 
       // asynchronously update the server
@@ -102,7 +102,7 @@ export default {
         });
     },
     toggleTodo(toToggle) {
-      // UI was updated via two way binding (v-model="todo.completed")
+      // UI was optimistically updated via v-model="todo.completed"
       // so we now asynchronously update the server to match the UI
       // and back out our UI updates in case of error.
       this.$apollo
