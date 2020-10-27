@@ -32,7 +32,7 @@ namespace Ec.Sar.TodoDemo.Domain
         title: title,
         completed: CompletedFlag.Of(false),
         createdAt: Timestamp.Now(),
-        modifiedAt: Timestamp.Now(), 
+        modifiedAt: Timestamp.Now(),
         active: ActiveFlag.Of(true),
         version: AggregateVersion.Next()
       );
@@ -57,7 +57,7 @@ namespace Ec.Sar.TodoDemo.Domain
         active,
         version);
 
-              Validator.ValidateObject(newTodo, new ValidationContext(newTodo), true);
+      Validator.ValidateObject(newTodo, new ValidationContext(newTodo), true);
 
       return newTodo;
     }
@@ -111,7 +111,7 @@ namespace Ec.Sar.TodoDemo.Domain
       if (!this.Title.Equals(title))
       {
         throw new ArgumentOutOfRangeException(
-          "title", 
+          "title",
           "You can not rename a Todo while changing its completion state."
         );
       }
@@ -122,7 +122,7 @@ namespace Ec.Sar.TodoDemo.Domain
       if (completed != null && !Completed.Equals(completed))
       {
         throw new ArgumentOutOfRangeException(
-          "completed", 
+          "completed",
           "You can not change a Todo's completion state while renaming it."
         );
       }
@@ -140,25 +140,25 @@ namespace Ec.Sar.TodoDemo.Domain
     {
       return this.Id.Equals(other.Id);
     }
-    [Required(ErrorMessage="A todo must have an ID")]
+    [Required(ErrorMessage = "A todo must have an ID")]
     public Id Id { get { return _id; } }
 
-    [Required(ErrorMessage="A todo must have a title")]
+    [Required(ErrorMessage = "A todo must have a title")]
     public Title Title { get { return _title; } }
 
-    [Required(ErrorMessage="A todo must have a completion state.")]
+    [Required(ErrorMessage = "A todo must have a completion state.")]
     public CompletedFlag Completed { get { return _completed; } }
 
-    [Required(ErrorMessage="A todo must have an active state")]
+    [Required(ErrorMessage = "A todo must have an active state")]
     public ActiveFlag Active { get { return _active; } }
 
-    [Required(ErrorMessage="A todo must have a createdAt unix timestamp.")]
+    [Required(ErrorMessage = "A todo must have a createdAt unix timestamp.")]
     public Timestamp CreatedAt { get { return _createdAt; } }
 
-    [Required(ErrorMessage="A todo must have a modifiedAt unix timestamp.")]
+    [Required(ErrorMessage = "A todo must have a modifiedAt unix timestamp.")]
     public Timestamp ModifiedAt { get { return _modifiedAt; } }
-    
-    [Required(ErrorMessage="A todo must have a version.")]
+
+    [Required(ErrorMessage = "A todo must have a version.")]
     public AggregateVersion Version { get { return _version; } }
   }
 }
