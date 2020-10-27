@@ -1,12 +1,10 @@
-using System;
-using Ec.Sar.TodoDemo.Infrastructure;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Hosting;
-using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using Ec.Sar.TodoDemo.Infrastructure;
+using Ec.Sar.TodoDemo.Domain;
 
 [assembly: WebJobsStartup(typeof(Ec.Sar.TodoDemo.App.Startup))]
 namespace Ec.Sar.TodoDemo.App
