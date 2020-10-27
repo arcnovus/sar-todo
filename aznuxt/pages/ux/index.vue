@@ -98,7 +98,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-          this.allTodos = [toRemove, ...this.allTodos]; // TODO: Preserve order.
+          this.allTodos = [...this.allTodos].splice(index, 0, toRemove);
         });
     },
     toggleTodo(toToggle) {
