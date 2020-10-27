@@ -1,6 +1,4 @@
 using System;
-using MongoDB.Driver;
-using MongoDB.Bson;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using Ec.Sar.TodoDemo.Infrastructure;
 using System.Web.Http;
 
 namespace Ec.Sar.TodoDemo.App
@@ -25,22 +22,18 @@ namespace Ec.Sar.TodoDemo.App
   }
 
   // TODO: Better Error Handling/Logging.
-  // TODO: Dependency Injection.
-  public static class TodoController
+  // TODO: Auth
+   public class TodoController
   {
-    private static Lazy<ITodoService> lazyTodoService = new Lazy<ITodoService>(initTodoService);
-    private static ITodoService todoService = lazyTodoService.Value;
-    private static ITodoService initTodoService()
+    private ITodoService _todoService;
+
+    public TodoController(ITodoService todoService)
     {
-      var dbClient = new MongoClient("mongodb://localhost:27017/?readPreference=primary&ssl=false");
-      var db = dbClient.GetDatabase("local");
-      var todoDb = db.GetCollection<BsonDocument>("todos");
-      var todoRepo = new TodoRepository(todoDb);
-      return new TodoService(todoRepo);
+      _todoService = todoService;
     }
 
     [FunctionName("GetTodoList")]
-    public static async Task<IActionResult> GetTodoList(
+    public async Task<IActionResult> GetTodoList(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "todos")] HttpRequest req,
         ILogger log)
     {
@@ -48,7 +41,7 @@ namespace Ec.Sar.TodoDemo.App
 
       try
       {
-        List<ITodoResource> todoList = await todoService.ListAllTodos();
+        List<ITodoResource> todoList = await _todoService.ListAllTodos();
         return (ActionResult)new OkObjectResult(todoList);
       }
       catch (Exception ex)
@@ -58,18 +51,17 @@ namespace Ec.Sar.TodoDemo.App
     }
 
     [FunctionName("PostTodo")]
-    public static async Task<IActionResult> PostTodo(
+    public async Task<IActionResult> PostTodo(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "todos")] HttpRequest req,
         ILogger log)
     {
       log.LogInformation("C# HTTP trigger function processed a POST request.");
 
-
       try
       {
         string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
         dynamic data = JsonConvert.DeserializeObject(requestBody);
-        var newTodo = todoService.RecordTodo(ToResource(data));
+        var newTodo = _todoService.RecordTodo(ToResource(data));
 
         return (ActionResult)new CreatedResult(
             new Uri(String.Concat("/api/todos/", newTodo.id), UriKind.Relative),
@@ -83,7 +75,7 @@ namespace Ec.Sar.TodoDemo.App
 
     }
     [FunctionName("PatchTodoTitle")]
-    public static async Task<IActionResult> PatchTodoTitle(
+    public async Task<IActionResult> PatchTodoTitle(
     [HttpTrigger(AuthorizationLevel.Anonymous, "patch", Route = "todos/{id}/title")] HttpRequest req,
     ILogger log,
     string id)
@@ -95,7 +87,7 @@ namespace Ec.Sar.TodoDemo.App
         dynamic data = JsonConvert.DeserializeObject(requestBody);
         var toRename = ToResource(data);
         toRename.id = id;
-        var updated = todoService.RenameTodo(toRename);
+        var updated = _todoService.RenameTodo(toRename);
 
         return (ActionResult)new OkObjectResult(updated);
       }
@@ -106,7 +98,7 @@ namespace Ec.Sar.TodoDemo.App
     }
 
     [FunctionName("PatchTodoCompletion")]
-    public static async Task<IActionResult> PatchTodoCompletion(
+    public async Task<IActionResult> PatchTodoCompletion(
     [HttpTrigger(AuthorizationLevel.Anonymous, "patch", Route = "todos/{id}/completion")] HttpRequest req,
     ILogger log,
     string id)
@@ -118,7 +110,7 @@ namespace Ec.Sar.TodoDemo.App
         dynamic data = JsonConvert.DeserializeObject(requestBody);
         var toToggle = ToResource(data);
         toToggle.id = id;
-        var updated = todoService.ToggleTodo(toToggle);
+        var updated = _todoService.ToggleTodo(toToggle);
 
         return (ActionResult)new OkObjectResult(updated);
       }
@@ -130,7 +122,7 @@ namespace Ec.Sar.TodoDemo.App
     }
 
     [FunctionName("DeleteTodo")]
-    public static IActionResult DeleteTodo(
+    public IActionResult DeleteTodo(
     [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "todos/{id}")] HttpRequest req,
     ILogger log,
     string id)
@@ -138,7 +130,7 @@ namespace Ec.Sar.TodoDemo.App
       log.LogInformation("C# HTTP trigger function processed a DELETE request.");
       try
       {
-        todoService.CancelTodo(id);
+        _todoService.CancelTodo(id);
         return (ActionResult)new OkResult();
       }
       catch (Exception ex)
@@ -146,7 +138,7 @@ namespace Ec.Sar.TodoDemo.App
         return HandleError(ex, log);
       }
     }
-    private static ITodoResource ToResource(dynamic data)
+    private ITodoResource ToResource(dynamic data)
     {
       return new TodoResource()
       {
@@ -156,7 +148,7 @@ namespace Ec.Sar.TodoDemo.App
       };
     }
     // TODO: Move this and make it better (proper logging, etc...).
-    private static IActionResult HandleError(Exception ex, ILogger log)
+    private IActionResult HandleError(Exception ex, ILogger log)
     {
       log.LogError(ex, ex.Message);
       if (ex.GetType() == typeof(System.ComponentModel.DataAnnotations.ValidationException))
