@@ -24,10 +24,10 @@ namespace Ec.Sar.TodoDemo.Domain
     private Timestamp _createdAt;
     private Timestamp _modifiedAt;
     private AggregateVersion _version;
-    
+
     public static Todo Record(Id id, Title title)
     {
-      var newTodo = Todo.Of(
+      return Todo.Of(
         id: id ?? Id.Next(),
         title: title,
         completed: CompletedFlag.Of(false),
@@ -37,9 +37,6 @@ namespace Ec.Sar.TodoDemo.Domain
         version: AggregateVersion.Next()
       );
 
-      Validator.ValidateObject(newTodo, new ValidationContext(newTodo), true);
-
-      return newTodo;
     }
 
     public static Todo Of(
@@ -51,7 +48,7 @@ namespace Ec.Sar.TodoDemo.Domain
       ActiveFlag active,
       AggregateVersion version)
     {
-      return new Todo(
+      var newTodo = new Todo(
         id,
         title,
         completed,
@@ -59,6 +56,10 @@ namespace Ec.Sar.TodoDemo.Domain
         modifiedAt,
         active,
         version);
+
+              Validator.ValidateObject(newTodo, new ValidationContext(newTodo), true);
+
+      return newTodo;
     }
 
     private Todo(
