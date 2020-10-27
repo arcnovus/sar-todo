@@ -28,6 +28,7 @@ namespace Ec.Sar.TodoDemo.Domain
     {
       return this.Value;
     }
+  
     [Required(ErrorMessage="A title must have a value.")]
     [MinLength(1, ErrorMessage = "The value of a title must be at least 1 non-empty character in length.")]
     public string Value { get { return _value; } }

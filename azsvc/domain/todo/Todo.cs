@@ -36,7 +36,6 @@ namespace Ec.Sar.TodoDemo.Domain
         active: ActiveFlag.Of(true),
         version: AggregateVersion.Next()
       );
-
     }
 
     public static Todo Of(
@@ -140,6 +139,7 @@ namespace Ec.Sar.TodoDemo.Domain
     {
       return this.Id.Equals(other.Id);
     }
+
     [Required(ErrorMessage = "A todo must have an ID")]
     public Id Id { get { return _id; } }
 

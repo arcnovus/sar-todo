@@ -6,7 +6,6 @@ using Ec.Sar.TodoDemo.Domain;
 using Ec.Sar.TodoDemo.App;
 using System.Threading.Tasks;
 
-
 namespace Ec.Sar.TodoDemo.Infrastructure
 {
   // TODO: Wrap Mongo errors to avoid leaking implementation details.
@@ -39,6 +38,7 @@ namespace Ec.Sar.TodoDemo.Infrastructure
                                   }).First();
       return FromBson(todo);
     }
+
     public ITodo Insert(ITodo todo)
     {
       _todoDb.InsertOne(new BsonDocument {
@@ -54,14 +54,14 @@ namespace Ec.Sar.TodoDemo.Infrastructure
       });
       return FindById(todo.Id);
     }
-    // TODO: Optimistic Concurrency
+
     public ITodo Update(ITodo todo)
     {
       var idFilter = Builders<BsonDocument>.Filter.Eq("_id", todo.Id.ToString());
       // Optimistic concurrency.
       var versionFilter = Builders<BsonDocument>.Filter.Eq("version", todo.Version.ToString());
       var filter = Builders<BsonDocument>.Filter.And(idFilter, versionFilter);
-      
+
       var update = Builders<BsonDocument>.Update
                                         .Set("_id", todo.Id.ToString())
                                         .Set("title", todo.Title.ToString())
@@ -71,7 +71,7 @@ namespace Ec.Sar.TodoDemo.Infrastructure
                                         .Set("modifiedAt", todo.ModifiedAt.ToLong())
                                         // BUG: MongoDB driver doesn't like decimals, 
                                         // so use a string https://jira.mongodb.org/browse/CSHARP-196
-                                        .Set("version", AggregateVersion.Next().ToString()); 
+                                        .Set("version", AggregateVersion.Next().ToString());
 
       var options = new FindOneAndUpdateOptions<BsonDocument>
       {
@@ -87,10 +87,12 @@ namespace Ec.Sar.TodoDemo.Infrastructure
       return FromBson(result);
     }
 
+    // TODO: Optimistic concurrency.
     public void Delete(Id id)
     {
       _todoDb.DeleteOne(Builders<BsonDocument>.Filter.Eq("_id", id.ToString()));
     }
+
     // TODO: Use a mapper.
     private ITodo FromBson(BsonDocument todo)
     {
