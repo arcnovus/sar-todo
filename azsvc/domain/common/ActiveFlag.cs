@@ -4,13 +4,13 @@ namespace Ec.Sar.Common.Domain
 {
   public class ActiveFlag : StatusFlag
   {
-    public new static ActiveFlag Of(bool? value)
+    public new static ActiveFlag Of(bool? isActive)
     {
-      if (!value.HasValue)
+      if (!isActive.HasValue)
       {
-        throw new ArgumentNullException("value", "Can not be null.");
+        throw new ArgumentNullException("isActive", "Can not be null.");
       }
-      return new ActiveFlag((bool)value);
+      return new ActiveFlag((bool)isActive);
     }
     private ActiveFlag(bool value) : base(value) { }
   }

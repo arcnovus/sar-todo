@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Ec.Sar.Common.Domain
 {
@@ -11,9 +12,13 @@ namespace Ec.Sar.Common.Domain
     }
     public static Timestamp Of(long value)
     {
-      return new Timestamp(value);
+      var newTS = new Timestamp(value);
+      Validator.ValidateObject(newTS, new ValidationContext(newTS), true);
+      return newTS;
     }
     private Timestamp(long value) { _value = value; }
+    
+    [Required]
     public long Value { get { return _value; } }
 
     public long ToLong() { return Value; }

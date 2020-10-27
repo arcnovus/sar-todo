@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using Ec.Sar.Common.Domain;
 
 namespace Ec.Sar.TodoDemo.Domain
@@ -25,7 +26,7 @@ namespace Ec.Sar.TodoDemo.Domain
     private AggregateVersion _version;
     public static Todo Record(Id id, Title title)
     {
-      return Todo.Of(
+      var newTodo = Todo.Of(
         id: id ?? Id.Next(),
         title: title,
         completed: CompletedFlag.Of(false),
@@ -34,6 +35,10 @@ namespace Ec.Sar.TodoDemo.Domain
         active: ActiveFlag.Of(true),
         version: AggregateVersion.Next()
       );
+
+      Validator.ValidateObject(newTodo, new ValidationContext(newTodo), true);
+      
+      return newTodo;
     }
     public static Todo Of(
       Id id,
@@ -124,12 +129,19 @@ namespace Ec.Sar.TodoDemo.Domain
     {
       return this.Id.Equals(other.Id);
     }
+    [Required(ErrorMessage="A todo must have an ID")]
     public Id Id { get { return _id; } }
+    [Required(ErrorMessage="A todo must have a title")]
     public Title Title { get { return _title; } }
+    [Required(ErrorMessage="A todo must have a completion state.")]
     public CompletedFlag Completed { get { return _completed; } }
+    [Required(ErrorMessage="A todo must have an active state")]
     public ActiveFlag Active { get { return _active; } }
+    [Required(ErrorMessage="A todo must have a createdAt unix timestamp.")]
     public Timestamp CreatedAt { get { return _createdAt; } }
+    [Required(ErrorMessage="A todo must have a modifiedAt unix timestamp.")]
     public Timestamp ModifiedAt { get { return _modifiedAt; } }
+    [Required(ErrorMessage="A todo must have a version.")]
     public AggregateVersion Version { get { return _version; } }
   }
 }

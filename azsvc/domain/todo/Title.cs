@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using Ec.Sar.Common.Domain;
 
 namespace Ec.Sar.TodoDemo.Domain
@@ -9,7 +10,9 @@ namespace Ec.Sar.TodoDemo.Domain
 
     public static Title Of(string value)
     {
-      return new Title(value);
+      var newTitle = new Title(value?.Trim());
+      Validator.ValidateObject(newTitle, new ValidationContext(newTitle), true);
+      return newTitle;
     }
     private Title(string value)
     {
@@ -25,6 +28,8 @@ namespace Ec.Sar.TodoDemo.Domain
     {
       return this.Value;
     }
+    [Required(ErrorMessage="A title must have a value.")]
+    [MinLength(1, ErrorMessage = "The value of a title must be at least 1 non-empty character in length.")]
     public string Value { get { return _value; } }
   }
 }

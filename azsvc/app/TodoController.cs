@@ -147,10 +147,13 @@ namespace Ec.Sar.TodoDemo.App
         completed = data.completed
       };
     }
-    // TODO: Move this and make it better.
+    // TODO: Move this and make it better (proper logging, etc...).
     private static IActionResult HandleError(Exception ex, ILogger log)
     {
-      log.LogError(ex.Message);
+      log.LogError(ex,ex.Message);
+      if(ex.GetType() == typeof(System.ComponentModel.DataAnnotations.ValidationException)) {
+        return (ActionResult)new BadRequestObjectResult(new { error = ex.Message });
+      }
       if (ex.Message.Contains("E11000"))
       {
         return (ActionResult)new BadRequestObjectResult(new { error = "Duplicate." });
