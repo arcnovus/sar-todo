@@ -15,13 +15,22 @@ using System.Web.Http;
 
 namespace Ec.Sar.TodoDemo.App
 {
+  public interface ITodoService
+  {
+    void CancelTodo(string id);
+    Task<List<ITodoResource>> ListAllTodos();
+    ITodoResource RecordTodo(ITodoResource todoInfo);
+    ITodoResource RenameTodo(ITodoResource todoInfo);
+    ITodoResource ToggleTodo(ITodoResource todoInfo);
+  }
+
   // TODO: Better Error Handling/Logging.
   // TODO: Dependency Injection.
   public static class TodoController
   {
-    private static Lazy<TodoService> lazyTodoService = new Lazy<TodoService>(initTodoService);
-    private static TodoService todoService = lazyTodoService.Value;
-    private static TodoService initTodoService()
+    private static Lazy<ITodoService> lazyTodoService = new Lazy<ITodoService>(initTodoService);
+    private static ITodoService todoService = lazyTodoService.Value;
+    private static ITodoService initTodoService()
     {
       var dbClient = new MongoClient("mongodb://localhost:27017/?readPreference=primary&ssl=false");
       var db = dbClient.GetDatabase("local");
@@ -149,8 +158,9 @@ namespace Ec.Sar.TodoDemo.App
     // TODO: Move this and make it better (proper logging, etc...).
     private static IActionResult HandleError(Exception ex, ILogger log)
     {
-      log.LogError(ex,ex.Message);
-      if(ex.GetType() == typeof(System.ComponentModel.DataAnnotations.ValidationException)) {
+      log.LogError(ex, ex.Message);
+      if (ex.GetType() == typeof(System.ComponentModel.DataAnnotations.ValidationException))
+      {
         return (ActionResult)new BadRequestObjectResult(new { error = ex.Message });
       }
       if (ex.Message.Contains("E11000"))

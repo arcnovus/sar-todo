@@ -25,9 +25,7 @@ namespace Ec.Sar.TodoDemo.App
     bool? completed { get; set; }
   }
 
-  public interface ITodoLogger : ILogger { }
-
-  public class TodoService
+  public class TodoService : ITodoService
   {
     ITodoRepository _repo;
     // TODO: Dependency Injection
