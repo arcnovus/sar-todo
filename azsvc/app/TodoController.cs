@@ -113,7 +113,7 @@ namespace Ec.Sar.TodoDemo.App
 
         var toToggle = ToResource(data);
         toToggle.id = id;
-        
+
         var updated = _todoService.ToggleTodo(toToggle);
 
         return (ActionResult)new OkObjectResult(updated);
@@ -122,7 +122,6 @@ namespace Ec.Sar.TodoDemo.App
       {
         return HandleError(ex, log);
       }
-
     }
 
     [FunctionName("DeleteTodo")]
