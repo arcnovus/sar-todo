@@ -4,20 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Ec.Sar.Common.Domain;
 using Ec.Sar.TodoDemo.Domain;
-using Microsoft.Extensions.Logging;
-
 
 namespace Ec.Sar.TodoDemo.App
 {
-  public interface ITodoRepository
-  {
-    Task<List<ITodo>> FindAll(bool includeInactive = false);
-    ITodo FindById(Id id);
-    ITodo Insert(ITodo todo);
-    ITodo Update(ITodo todo);
-    void Delete(Id id);
-  }
-
   public interface ITodoResource
   {
     string id { get; set; }
