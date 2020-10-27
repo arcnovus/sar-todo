@@ -15,15 +15,14 @@ using System.Web.Http;
 
 namespace Ec.Sar.TodoDemo.App
 {
-  // TODO: Better Error Handling.
-  // TODO: Use DocumentClient
+  // TODO: Better Error Handling/Logging.
+  // TODO: Dependency Injection.
   public static class TodoController
   {
     private static Lazy<TodoService> lazyTodoService = new Lazy<TodoService>(initTodoService);
     private static TodoService todoService = lazyTodoService.Value;
     private static TodoService initTodoService()
     {
-      // TODO: Switch to Azure DocumentClient
       var dbClient = new MongoClient("mongodb://localhost:27017/?readPreference=primary&ssl=false");
       var db = dbClient.GetDatabase("local");
       var todoDb = db.GetCollection<BsonDocument>("todos");
