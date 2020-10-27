@@ -24,6 +24,7 @@ namespace Ec.Sar.TodoDemo.Domain
     private Timestamp _createdAt;
     private Timestamp _modifiedAt;
     private AggregateVersion _version;
+    
     public static Todo Record(Id id, Title title)
     {
       var newTodo = Todo.Of(
@@ -37,9 +38,10 @@ namespace Ec.Sar.TodoDemo.Domain
       );
 
       Validator.ValidateObject(newTodo, new ValidationContext(newTodo), true);
-      
+
       return newTodo;
     }
+
     public static Todo Of(
       Id id,
       Title title,
@@ -58,6 +60,7 @@ namespace Ec.Sar.TodoDemo.Domain
         active,
         version);
     }
+
     private Todo(
       Id id,
       Title title,
@@ -75,6 +78,7 @@ namespace Ec.Sar.TodoDemo.Domain
       _modifiedAt = modifiedAt;
       _version = version;
     }
+
     public void SetCompletionState(CompletedFlag completed, Title title = null)
     {
       if (completed.IsTrue())
@@ -86,18 +90,21 @@ namespace Ec.Sar.TodoDemo.Domain
         MarkIncomplete(title);
       }
     }
+
     public void MarkComplete(Title title = null)
     {
       if (title != null) EnsureTitleMatchesWhenTogglingCompletion(title);
       this._completed = CompletedFlag.Of(true);
       this._modifiedAt = Timestamp.Now();
     }
+
     public void MarkIncomplete(Title title = null)
     {
       if (title != null) EnsureTitleMatchesWhenTogglingCompletion(title);
       this._completed = CompletedFlag.Of(false);
       this._modifiedAt = Timestamp.Now();
     }
+
     private void EnsureTitleMatchesWhenTogglingCompletion(Title title)
     {
       if (!this.Title.Equals(title))
@@ -108,6 +115,7 @@ namespace Ec.Sar.TodoDemo.Domain
         );
       }
     }
+
     public void Rename(Title newName, CompletedFlag completed = null)
     {
       if (completed != null && !Completed.Equals(completed))
@@ -120,27 +128,35 @@ namespace Ec.Sar.TodoDemo.Domain
       this._title = newName;
       this._modifiedAt = Timestamp.Now();
     }
+
     public void Cancel()
     {
       this._active = ActiveFlag.Of(false);
       this._modifiedAt = Timestamp.Now();
     }
+
     public bool Equals(IReferenceObject other)
     {
       return this.Id.Equals(other.Id);
     }
     [Required(ErrorMessage="A todo must have an ID")]
     public Id Id { get { return _id; } }
+
     [Required(ErrorMessage="A todo must have a title")]
     public Title Title { get { return _title; } }
+
     [Required(ErrorMessage="A todo must have a completion state.")]
     public CompletedFlag Completed { get { return _completed; } }
+
     [Required(ErrorMessage="A todo must have an active state")]
     public ActiveFlag Active { get { return _active; } }
+
     [Required(ErrorMessage="A todo must have a createdAt unix timestamp.")]
     public Timestamp CreatedAt { get { return _createdAt; } }
+
     [Required(ErrorMessage="A todo must have a modifiedAt unix timestamp.")]
     public Timestamp ModifiedAt { get { return _modifiedAt; } }
+    
     [Required(ErrorMessage="A todo must have a version.")]
     public AggregateVersion Version { get { return _version; } }
   }
