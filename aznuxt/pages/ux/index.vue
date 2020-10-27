@@ -38,6 +38,7 @@
 </template>
 
 <script>
+// TODO: break down into smaller components.
 import { nanoid } from "nanoid";
 import allTodosGQL from "~/apollo/allTodos";
 import addTodoGQL from "~/apollo/addTodo";
@@ -56,7 +57,6 @@ export default {
   },
   methods: {
     addTodo() {
-      console.log("attempting addTodo");
       if (!this.todoTxt?.length) return;
 
       let newTodo = {
@@ -84,8 +84,8 @@ export default {
         });
     },
     removeTodo(toRemove, index) {
-      console.log("attempting removeTodo");
       if (toRemove == null) return;
+
       // update the UI
       this.allTodos = this.allTodos.filter((todo) => todo.id !== toRemove.id);
 
@@ -102,8 +102,6 @@ export default {
         });
     },
     toggleTodo(toToggle) {
-      console.log("attempting toggleTodo");
-
       // UI was updated via two way binding (v-model="todo.completed")
       // so we now asynchronously update the server to match the UI
       // and back out our UI updates in case of error.
