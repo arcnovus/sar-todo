@@ -1,10 +1,9 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using Ec.Sar.Common.Domain;
 using Ec.Sar.TodoDemo.Domain;
-using Ec.Sar.TodoDemo.App;
-using System.Threading.Tasks;
 
 namespace Ec.Sar.TodoDemo.Infrastructure
 {
