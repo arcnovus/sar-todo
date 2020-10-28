@@ -18,6 +18,7 @@ namespace Ec.Sar.Common.Domain
     public bool IsTrue() => Value; 
     public bool IsFalse() => !Value; 
     public bool ToBoolean() => Value; 
+    public override string ToString() => Value.ToString();
     public bool Equals(IValueObject<bool> other)
     {
       return this.Value == other.Value;
