@@ -22,6 +22,7 @@ namespace Ec.Sar.TodoDemo.App
     {
       this._repo = repo;
     }
+    
     public async Task<List<ITodoResource>> ListAllTodos()
     {
       var allTodos = await this._repo.FindAll();
@@ -34,12 +35,14 @@ namespace Ec.Sar.TodoDemo.App
           }
         ).ToList<ITodoResource>();
     }
+
     public ITodoResource RecordTodo(ITodoResource todoInfo)
     {
       var newTodo = Todo.Record(Id.Of(todoInfo.id), Title.Of(todoInfo.title));
       var inserted = this._repo.Insert(newTodo);
       return ToResource(inserted);
     }
+
     public void CancelTodo(string id)
     {
       var todo = this._repo.FindById(Id.Of(id));
@@ -58,6 +61,7 @@ namespace Ec.Sar.TodoDemo.App
       this._repo.Update(todo);
       return ToResource(todo);
     }
+
     public ITodoResource RenameTodo(ITodoResource todoInfo)
     {
       var todo = this._repo.FindById(Id.Of(todoInfo.id));
@@ -69,6 +73,7 @@ namespace Ec.Sar.TodoDemo.App
       this._repo.Update(todo);
       return ToResource(todo);
     }
+
     private ITodoResource ToResource(ITodo todo)
     {
       return new TodoResource()

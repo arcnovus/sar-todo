@@ -6,16 +6,20 @@ namespace Ec.Sar.Common.Domain
   public class Timestamp : IValueObject<long>
   {
     private long _value;
+    
     public static Timestamp Now()
     {
-      return Timestamp.Of(((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds());
+      var utcNowOffset = ((DateTimeOffset)DateTime.UtcNow);
+      return Timestamp.Of(utcNowOffset.ToUnixTimeMilliseconds());
     }
+
     public static Timestamp Of(long value)
     {
-      var newTS = new Timestamp(value);
-      Validator.ValidateObject(newTS, new ValidationContext(newTS), true);
-      return newTS;
+      var ts = new Timestamp(value);
+      Validator.ValidateObject(ts, new ValidationContext(ts), true);
+      return ts;
     }
+
     private Timestamp(long value) { _value = value; }
     
     [Required]

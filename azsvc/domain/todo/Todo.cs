@@ -81,14 +81,8 @@ namespace Ec.Sar.TodoDemo.Domain
 
     public void SetCompletionState(CompletedFlag completed, Title title = null)
     {
-      if (completed.IsTrue())
-      {
-        MarkComplete(title);
-      }
-      else
-      {
-        MarkIncomplete(title);
-      }
+      if (completed.IsTrue()) { MarkComplete(title); }
+      else { MarkIncomplete(title); }
     }
 
     public void MarkComplete(Title title = null)
